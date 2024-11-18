@@ -203,7 +203,7 @@ class SimpleInvoice(BaseInvoice):
     def _drawTitle(self):
         # Up line
         self.pdf.setFont(FONT.normal, 15)
-        self.pdf.drawString(self.LEFT * mm, self.TOP * mm, self.invoice.title)
+        self.pdf.drawString(self.LEFT * mm, self.TOP * mm, self.invoice_id)
         self.pdf.drawRightString(
             (self.LEFT + 180) * mm,
             self.TOP * mm,

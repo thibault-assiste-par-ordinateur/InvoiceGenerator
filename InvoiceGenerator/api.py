@@ -299,7 +299,7 @@ class Invoice(UnicodeProperty):
     #: Use this parameter to set different rounding strategy.
     rounding_strategy = decimal.ROUND_HALF_EVEN
 
-    def __init__(self, client, provider, creator, title):
+    def __init__(self, client, provider, creator):
         assert isinstance(client, Client)
         assert isinstance(provider, Provider)
         assert isinstance(creator, Creator)
@@ -307,7 +307,6 @@ class Invoice(UnicodeProperty):
         self.client = client
         self.provider = provider
         self.creator = creator
-        self.title = title
         self._items = []
 
         for attr in self._attrs:
