@@ -398,23 +398,3 @@ class Invoice(UnicodeProperty):
             rows.append((vat, items["total"], items["total_tax"], items["tax"]))
 
         return rows
-
-
-#
-# class Correction(Invoice):
-#     """
-#     Correcting invoice
-#     """
-#
-#     _attrs = (
-#         "number",
-#         "reason",
-#         "title",
-#         "paytype",
-#         "date",
-#         "payback",
-#         "taxable_date",
-#     )
-#
-#     def __init__(self, client, provider, creator):
-#         super(Correction, self).__init__(client, provider, creator)
