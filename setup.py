@@ -5,9 +5,9 @@ import shlex
 import subprocess
 import sys
 
-import InvoiceGenerator
-
 from setuptools import find_packages, setup
+
+import InvoiceGenerator
 
 version = InvoiceGenerator.__versionstr__
 
@@ -54,7 +54,7 @@ setup(
     install_requires=[
         "reportlab",
         "pillow",
-        "qrplatba>=0.3.3",
+        # "qrplatba>=0.3.3",
         "babel",
     ],
     tests_require=[

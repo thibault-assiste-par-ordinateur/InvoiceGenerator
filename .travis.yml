@@ -5,7 +5,7 @@ python:
     - "3.7"
     - "3.8"
 before_install:
-    - sudo locale-gen 'cs_CZ.UTF-8'
+    - sudo locale-gen 'fr_FR.UTF-8'
 install:
     - "pip install sphinx"
     - "python setup.py install"

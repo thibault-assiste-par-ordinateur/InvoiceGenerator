@@ -6,9 +6,7 @@ from decimal import Decimal
 
 from InvoiceGenerator.conf import _
 
-import qrcode
-
-__all__ = ['Address', 'Client', 'Provider', 'Creator', 'Item', 'Invoice']
+__all__ = ["Address", "Client", "Provider", "Creator", "Item", "Invoice"]
 
 
 class UnicodeProperty(object):
@@ -25,7 +23,7 @@ class Address(UnicodeProperty):
     Abstract address definition
 
     :param summary: address header line - name of addressee or company name
-    :param division: division of the organisation (second line of the address)
+    :param additional_name: client name
     :param address: line of the address with street and house number
     :param city: city or part of the city
     :param zip_code: zip code (PSČ in Czech)
@@ -40,19 +38,55 @@ class Address(UnicodeProperty):
     :param ir: Taxpayer identification Number (IČO in czech)
     :param logo_filename: path to the image of logo of the company
     :param country: country
+    :param ss: numéro de sécurité sociale
+    :param siret: numéro siret
     """
-    _attrs = ('summary', 'address', 'city', 'zip_code', 'phone', 'email',
-              'bank_name', 'bank_account', 'bank_code', 'note', 'vat_id', 'ir',
-              'logo_filename', 'vat_note', 'country', 'division')
+
+    _attrs = (
+        "summary",
+        "additional_name",
+        "address",
+        "city",
+        "zip_code",
+        "phone",
+        "email",
+        "bank_name",
+        "bank_account",
+        "bank_code",
+        "note",
+        "vat_id",
+        "ir",
+        "logo_filename",
+        "vat_note",
+        "country",
+        "ss",
+        "siret",
+    )
 
     def __init__(
-        self, summary, address='', city='', zip_code='', phone='', email='',
-        bank_name='', bank_account='', bank_code='', note='', vat_id='', ir='',
-        logo_filename='', vat_note='', country='', division='',
+        self,
+        summary,
+        additional_name="",
+        address="",
+        city="",
+        zip_code="",
+        phone="",
+        email="",
+        bank_name="",
+        bank_account="",
+        bank_code="",
+        note="",
+        vat_id="",
+        ir="",
+        logo_filename="",
+        vat_note="",
+        country="",
+        ss="",
+        siret="",
     ):
         self.summary = summary
         self.address = address
-        self.division = division
+        self.additional_name = additional_name
         self.city = city
         self.country = country
         self.zip_code = zip_code
@@ -66,9 +100,11 @@ class Address(UnicodeProperty):
         self.vat_note = vat_note
         self.ir = ir
         self.logo_filename = logo_filename
+        self.ss = ss
+        self.siret = siret
 
     def bank_account_str(self):
-        """ Returns bank account identifier with bank code after slash """
+        """Returns bank account identifier with bank code after slash"""
         if self.bank_code:
             return "%s/%s" % (self.bank_account, self.bank_code)
         else:
@@ -76,19 +112,19 @@ class Address(UnicodeProperty):
 
     def _get_address_lines(self):
         address_line = [self.summary]
-        if self.division:
-            address_line.append(self.division)
+        if self.additional_name:
+            address_line.append(self.additional_name)
         address_line += [
             self.address,
-            u' '.join(filter(None, (self.zip_code, self.city))),
-            ]
+            " ".join(filter(None, (self.zip_code, self.city))),
+        ]
         if self.country:
             address_line.append(self.country)
         if self.vat_id:
-            address_line.append(_(u'Vat in: %s') % self.vat_id)
+            address_line.append(_("Vat in: %s") % self.vat_id)
 
         if self.ir:
-            address_line.append(_(u'IR: %s') % self.ir)
+            address_line.append(_("IR: %s") % self.ir)
 
         return address_line
 
@@ -96,13 +132,22 @@ class Address(UnicodeProperty):
         return [
             self.phone,
             self.email,
-            ]
+        ]
+
+    def _get_pro_infos(self):
+        siret = ss = ""
+        if self.siret:
+            siret = f"SIRET: {self.siret}"
+        if self.ss:
+            ss = f"SS: {self.ss}"
+        return [siret, ss]
 
 
 class Client(Address):
     """
     Definition of client (recipient of the invoice) address.
     """
+
     pass
 
 
@@ -110,6 +155,7 @@ class Provider(Address):
     """
     Definition of prvider (subject, that issued the invoice) address.
     """
+
     pass
 
 
@@ -120,9 +166,10 @@ class Creator(UnicodeProperty):
     :param name: name of the issuer
     :param stamp_filename: path to file with stamp (or subscription)
     """
-    _attrs = ('name', 'stamp_filename')
 
-    def __init__(self, name, stamp_filename=''):
+    _attrs = ("name", "stamp_filename")
+
+    def __init__(self, name, stamp_filename=""):
         self.name = name
         self.stamp_filename = stamp_filename
 
@@ -137,7 +184,7 @@ class Item(object):
     :param tax: the tax rate under which the item falls (in percent)
     """
 
-    def __init__(self, count, price, description='', unit='', tax=Decimal(0)):
+    def __init__(self, count, price, description="", unit="", tax=Decimal(0)):
         self.count = count
         self.price = price
         self._description = description
@@ -146,21 +193,21 @@ class Item(object):
 
     @property
     def total(self):
-        """ Total price for the items without tax. """
+        """Total price for the items without tax."""
         return self.price * self.count
 
     @property
     def total_tax(self):
-        """ Total price for the items with tax. """
+        """Total price for the items with tax."""
         return self.price * self.count * (Decimal(1) + self.tax / Decimal(100))
 
     def count_tax(self):
-        """ Value of only tax that will be payed for the items. """
+        """Value of only tax that will be payed for the items."""
         return self.total_tax - self.total
 
     @property
     def description(self):
-        """ Short description of the item. """
+        """Short description of the item."""
         return self._description
 
     @description.setter
@@ -169,7 +216,7 @@ class Item(object):
 
     @property
     def count(self):
-        """ Count or amount of the items. """
+        """Count or amount of the items."""
         return self._count
 
     @count.setter
@@ -178,7 +225,7 @@ class Item(object):
 
     @property
     def price(self):
-        """ Price for unit. """
+        """Price for unit."""
         return self._price
 
     @price.setter
@@ -187,7 +234,7 @@ class Item(object):
 
     @property
     def unit(self):
-        """ Unit. """
+        """Unit."""
         return self._unit
 
     @unit.setter
@@ -196,7 +243,7 @@ class Item(object):
 
     @property
     def tax(self):
-        """ Tax rate. """
+        """Tax rate."""
         return self._tax
 
     @tax.setter
@@ -218,19 +265,16 @@ class Invoice(UnicodeProperty):
     :param provider: provider of the invoice
     :type provider: Provider
     """
-    #: title on the invoice
-    title = ""
-    #: variable symbol associated with the payment
-    variable_symbol = None
-    #: specific_symbol
-    specific_symbol = None
-    #: textual description of type of payment
+
+    kind = "facture"  # facture|devis use set_kind()
+    #: mode: 1|2, type d'items
+    # 1: unités, prix unitaire, total
+    # 2: prix de vente, droits d'auteur (%), total
+    mode = 1  #: textual description of type of payment
     paytype = None
     #: number or string used as the invoice identifier
     number = None
-    #: iban
     iban = None
-    #: swift
     swift = None
     #: date of exposure
     date = None
@@ -239,11 +283,12 @@ class Invoice(UnicodeProperty):
     #:  taxable date
     taxable_date = None
     #: currency_locale: locale according to which will be the written currency representations
-    currency_locale = "cs_CZ.UTF-8"
+    currency_locale = "fr_FR.UTF-8"
     #: currency identifier (e.g. "$" or "Kč")
-    currency = u"Kč"
+    currency = "€"
 
-    use_tax = False
+    # objet de la facture
+    objet = ""
 
     #: round result to integers?
     rounding_result = False
@@ -254,7 +299,7 @@ class Invoice(UnicodeProperty):
     #: Use this parameter to set different rounding strategy.
     rounding_strategy = decimal.ROUND_HALF_EVEN
 
-    def __init__(self, client, provider, creator):
+    def __init__(self, client, provider, creator, title):
         assert isinstance(client, Client)
         assert isinstance(provider, Provider)
         assert isinstance(creator, Creator)
@@ -262,23 +307,40 @@ class Invoice(UnicodeProperty):
         self.client = client
         self.provider = provider
         self.creator = creator
+        self.title = title
         self._items = []
 
         for attr in self._attrs:
-            self.__setattr__(attr, '')
+            self.__setattr__(attr, "")
 
     def _price_tax_unrounded(self):
         return sum(item.total_tax for item in self.items)
 
     @property
     def price(self):
-        """ Total sum price without taxes. """
+        """Total sum price without taxes."""
         return self._round_result(sum(item.total for item in self.items))
 
     @property
     def price_tax(self):
-        """ Total sum price including taxes. """
+        """Total sum price including taxes."""
         return self._round_result(self._price_tax_unrounded())
+
+    def set_kind(self, kind):
+        possible_values = ["facture", "devis"]
+        if kind in possible_values:
+            self.kind = kind
+        else:
+            print(f"wrong kind: '{kind}'. Possible values: {possible_values}")
+            self.kind = possible_values[0]
+
+    def set_mode(self, mode):
+        possible_values = [1, 2]
+        if mode in possible_values:
+            self.mode = mode
+        else:
+            print(f"wrong mode: '{mode}'. Possible values: {possible_values}")
+            self.mode = possible_values[0]
 
     def add_item(self, item):
         """
@@ -292,15 +354,17 @@ class Invoice(UnicodeProperty):
 
     @property
     def items(self):
-        """ Items on the invoice. """
+        """Items on the invoice."""
         return self._items
 
     def _round_price(self, price):
-        return decimal.Decimal(price).quantize(0, rounding=self.rounding_strategy)
+        return decimal.Decimal(price).quantize(
+            0, rounding=self.rounding_strategy
+        )
 
     @property
     def difference_in_rounding(self):
-        """ Difference between rounded price and real price. """
+        """Difference between rounded price and real price."""
         price = self._price_tax_unrounded()
         return Decimal(self._round_price(price)) - price
 
@@ -308,11 +372,15 @@ class Invoice(UnicodeProperty):
         table = collections.OrderedDict()
         for item in self.items:
             if item.tax not in table:
-                table[item.tax] = {'total': item.total, 'total_tax': item.total_tax, 'tax': item.count_tax()}
+                table[item.tax] = {
+                    "total": item.total,
+                    "total_tax": item.total_tax,
+                    "tax": item.count_tax(),
+                }
             else:
-                table[item.tax]['total'] += item.total
-                table[item.tax]['total_tax'] += item.total_tax
-                table[item.tax]['tax'] += item.count_tax()
+                table[item.tax]["total"] += item.total
+                table[item.tax]["total_tax"] += item.total_tax
+                table[item.tax]["tax"] += item.count_tax()
 
         return table
 
@@ -327,68 +395,26 @@ class Invoice(UnicodeProperty):
     def generate_breakdown_vat_table(self):
         rows = []
         for vat, items in self.generate_breakdown_vat().items():
-            rows.append((vat, items['total'], items['total_tax'], items['tax']))
+            rows.append((vat, items["total"], items["total_tax"], items["tax"]))
 
         return rows
 
 
-class Correction(Invoice):
-    """
-    Correcting invoice
-    """
-    _attrs = ('number', 'reason', 'title', 'variable_symbol', 'specific_symbol', 'paytype',
-              'date', 'payback', 'taxable_date')
-
-    def __init__(self, client, provider, creator):
-        super(Correction, self).__init__(client, provider, creator)
-
-
-class QrCodeBuilder(object):
-
-    def __init__(self, invoice):
-        """
-        :param invoice: Invoice
-        """
-        self.invoice = invoice
-        self.qr = self._fill(invoice)
-        self.tmp_file = None
-
-    def _fill(self, invoice):
-        from qrplatba import QRPlatbaGenerator
-
-        qr_kwargs = {
-            'account': invoice.provider.bank_account_str(),
-            'amount': invoice.use_tax and invoice.price_tax or invoice.price,
-            'x_ss': invoice.specific_symbol,
-        }
-
-        if invoice.variable_symbol:
-            qr_kwargs['x_vs'] = invoice.variable_symbol
-
-        try:
-            qr_kwargs['due_date'] = invoice.payback.strftime("%Y%m%d")
-        except AttributeError:
-            pass
-
-        qr_kwargs = {k: v for k, v in qr_kwargs.items() if v}
-
-        return QRPlatbaGenerator(**qr_kwargs)
-
-    @property
-    def filename(self):
-        from tempfile import NamedTemporaryFile
-        img = qrcode.make(self.qr.get_text())
-
-        self.tmp_file = NamedTemporaryFile(
-            mode='w+b',
-            suffix='.png',
-            delete=False,
-        )
-        img.save(self.tmp_file)
-        self.tmp_file.close()
-        return self.tmp_file.name
-
-    def destroy(self):
-        if hasattr(self.tmp_file, 'name'):
-            import os
-            os.unlink(self.tmp_file.name)
+#
+# class Correction(Invoice):
+#     """
+#     Correcting invoice
+#     """
+#
+#     _attrs = (
+#         "number",
+#         "reason",
+#         "title",
+#         "paytype",
+#         "date",
+#         "payback",
+#         "taxable_date",
+#     )
+#
+#     def __init__(self, client, provider, creator):
+#         super(Correction, self).__init__(client, provider, creator)
