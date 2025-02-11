@@ -43,6 +43,14 @@ except ImportError:
     def _(x):
         x
 
+# OS
+is_windows = is_linux = False
+operating_system = os.name
+if operating_system == 'nt': # windows
+    is_windows = True
+elif operating_system == "posix": # linux/mac
+    is_linux = True
+
 
 class FONT:
     normal = "DejaVu"
@@ -50,7 +58,10 @@ class FONT:
 
 
 class PATH:
-    output_dir = Path("~/2_domaines/compta/FACTURATION/Factures/").expanduser()
+    if is_linux:
+        output_dir = Path("~/2_domaines/compta/FACTURATION/Factures/").expanduser()
+    elif is_windows:
+        output_dir = Path("C://Users/thiba/Documents/Git/admin/compta/FACTURATION/Factures/").expanduser()
 
 
 print(f"output: {PATH.output_dir}")
