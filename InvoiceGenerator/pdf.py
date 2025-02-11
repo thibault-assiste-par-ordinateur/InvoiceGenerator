@@ -197,7 +197,7 @@ class SimpleInvoice(BaseInvoice):
 
     def _addMetaInformation(self, pdf):
         pdf.setCreator(self.invoice.provider.summary)
-        pdf.setTitle(self.invoice.title)
+        pdf.setTitle(self.invoice.kind)
         pdf.setAuthor(self.invoice.creator.name)
 
     def _drawTitle(self):

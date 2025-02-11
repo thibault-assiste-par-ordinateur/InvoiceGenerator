@@ -32,7 +32,7 @@ provider = Provider(
 
 creator = Creator("nom prénom")
 
-invoice = Invoice(client, provider, creator, title="Facture")
+invoice = Invoice(client, provider, creator)#, title="Facture")
 invoice.add_item(Item(32, 600, description="Item 1"))
 invoice.add_item(Item(60, 50, description="Item 2", tax=21))
 invoice.add_item(Item(50, 60, description="Item 3", tax=0))
