@@ -142,13 +142,15 @@ class SimpleInvoice(BaseInvoice):
     """
     Generator of simple invoice in PDF format
 
-    :param invoice: the invoice
-    :type invoice: Invoice
+    :param invoice: (Invoice) the invoice
+    :param path: (Path) output dir path
+    :param type: (str) "devis/facture"
     """
 
-    def __init__(self, invoice, path):
+    def __init__(self, invoice, path, type:str="facture"):
         super().__init__(invoice)
         self.path = path
+        self.invoice_type = type 
 
     LINE_WIDTH = 0.2
     TOP = 277
@@ -208,7 +210,7 @@ class SimpleInvoice(BaseInvoice):
     def _drawTitle(self):
         # Up line
         self.pdf.setFont(FONT.normal, 15)
-        self.pdf.drawString(self.LEFT * mm, self.TOP * mm, self.invoice_id)
+        self.pdf.drawString(self.invoice_type)
         self.pdf.drawRightString(
             (self.LEFT + 180) * mm,
             self.TOP * mm,
