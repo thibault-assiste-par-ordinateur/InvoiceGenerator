@@ -194,12 +194,16 @@ class Item(object):
     @property
     def total(self):
         """Total price for the items without tax."""
-        return self.price * self.count
+        if self.price and self.count:
+            return self.price * self.count
+        return ""
 
     @property
     def total_tax(self):
         """Total price for the items with tax."""
-        return self.price * self.count * (Decimal(1) + self.tax / Decimal(100))
+        if self.price and self.count and self.tax:
+            return self.price * self.count * (Decimal(1) + self.tax / Decimal(100))
+        return ""
 
     def count_tax(self):
         """Value of only tax that will be payed for the items."""
