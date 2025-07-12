@@ -294,7 +294,7 @@ class Invoice(UnicodeProperty):
     # objet de la facture
     objet = ""
 
-    _commentaire = ""
+    commentaire = ""
 
     #: round result to integers?
     rounding_result = False
@@ -370,14 +370,14 @@ class Invoice(UnicodeProperty):
             0, rounding=self.rounding_strategy
         )
 
-    @property
-    def commentaire(self):
-        """Optional commentaire"""
-        return self._commentaire
+    # @property
+    # def commentaire(self):
+    #     """Optional commentaire"""
+    #     return self._commentaire
 
-    @commentaire.setter
-    def commentaire(self, value):
-        self._commentaire = value if value else ""
+    # @commentaire.setter
+    # def commentaire(self, value):
+    #     self._commentaire = value if value else ""
 
 
     @property
