@@ -172,11 +172,11 @@ class InvoiceCLI:
         for it in items:
             invoice.add_item(it)
 
-        pdf_path = output / f"{kind}_{name}.pdf"
-        pdf_path.parent.mkdir(parents=True, exist_ok=True)
-        SimpleInvoice(invoice, pdf_path).gen()
+        # pdf_path = output / f"{kind}_{name}.pdf"
+        # pdf_path.parent.mkdir(parents=True, exist_ok=True)
+        SimpleInvoice(invoice, output).gen()
 
-        self.console.print(f"[bold green]PDF generated -> {pdf_path}")
+        self.console.print(f"[bold green]PDF generated -> {output}")
 
 
 # -------------------------------------------------------------------------
