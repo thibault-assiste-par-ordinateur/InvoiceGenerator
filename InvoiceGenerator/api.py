@@ -147,7 +147,6 @@ class Client(Address):
     """
     Definition of client (recipient of the invoice) address.
     """
-
     pass
 
 
@@ -155,7 +154,6 @@ class Provider(Address):
     """
     Definition of prvider (subject, that issued the invoice) address.
     """
-
     pass
 
 
@@ -294,6 +292,7 @@ class Invoice(UnicodeProperty):
     # objet de la facture
     objet = ""
 
+    # optional commentaire
     commentaire = ""
 
     #: round result to integers?

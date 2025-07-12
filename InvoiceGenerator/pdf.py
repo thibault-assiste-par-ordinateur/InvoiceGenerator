@@ -147,10 +147,9 @@ class SimpleInvoice(BaseInvoice):
     :param type: (str) "devis/facture"
     """
 
-    def __init__(self, invoice, path, type:str="facture"):
+    def __init__(self, invoice, path):
         super().__init__(invoice)
         self.path = path
-        self.invoice_type = type 
 
     LINE_WIDTH = 0.2
     TOP = 277
@@ -193,7 +192,7 @@ class SimpleInvoice(BaseInvoice):
 
         self.pdf.showPage()
         self.pdf.save()
-        print(f"facture saved: {full_path}")
+        print(f"{self.invoice.kind} saved: {full_path}")
 
     #############################################################
     # Draw methods
@@ -207,7 +206,7 @@ class SimpleInvoice(BaseInvoice):
     def _drawTitle(self):
         # Up line
         self.pdf.setFont(FONT.normal, 15)
-        self.pdf.drawString(self.LEFT * mm, self.TOP * mm, _(self.invoice_type))
+        self.pdf.drawString(self.LEFT * mm, self.TOP * mm, _(self.invoice.kind))
         self.pdf.drawRightString((self.LEFT + 180) * mm, self.TOP * mm, _(f"n° {self.invoice_id}"))
 
     def _drawDates(self, TOP, LEFT):
