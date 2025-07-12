@@ -231,8 +231,7 @@ class Item(object):
 
     @price.setter
     def price(self, value):
-        if value:
-            self._price = Decimal(value)
+        self._price = Decimal(value) if value else ""
 
     @property
     def unit(self):
