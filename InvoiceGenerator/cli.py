@@ -59,6 +59,9 @@ class InvoiceCLI:
             )
         ).expanduser().resolve()
 
+
+        self.console.print(output)
+
         kind = self._prompt_missing(
             args.kind, "Choose kind",
             choices=self.KIND_CHOICES,
