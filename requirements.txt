@@ -2,3 +2,4 @@ pyyaml
 reportlab
 pillow
 babel
+rich
