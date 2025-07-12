@@ -145,8 +145,8 @@ class SimpleInvoice(BaseInvoice):
     :type invoice: Invoice
     """
 
-    def __init__(self, path):
-        super().__init__(self)
+    def __init__(self, invoice, path):
+        super().__init__(invoice)
         self.path = path
 
     LINE_WIDTH = 0.2
