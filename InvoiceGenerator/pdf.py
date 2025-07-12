@@ -347,8 +347,8 @@ class SimpleInvoice(BaseInvoice):
     def _drawObject(self, TOP, LEFT):
         style = ParagraphStyle("normal", fontName=FONT.normal, fontSize=12)
         p = Paragraph(_(f"Objet: {self.invoice.objet}"), style)
-        pwidth, pheight = p.wrapOn(self.pdf, 180 * mm, 30 * mm)
-        p.drawOn(self.pdf, LEFT * mm, (TOP + 2) * mm)
+        pwidth, pheight = p.wrapOn(self.pdf, 175 * mm, 30 * mm)
+        p.drawOn(self.pdf, LEFT * mm, TOP * mm)
 
         # self.pdf.setFont(FONT.normal, 12)
         # self.pdf.drawString(LEFT * mm, (TOP + 2) * mm, _(f"Objet: {self.invoice.objet}"))
