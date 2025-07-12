@@ -323,7 +323,10 @@ class Invoice(UnicodeProperty):
     @property
     def price(self):
         """Total sum price without taxes."""
-        return self._round_result(sum(item.total for item in self.items))
+        try:
+            return self._round_result(sum(item.total for item in self.items))
+        except Exception as err:
+            print(f"warning: {err}")
 
     @property
     def price_tax(self):
