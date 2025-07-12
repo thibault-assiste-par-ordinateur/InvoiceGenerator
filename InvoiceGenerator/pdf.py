@@ -345,10 +345,13 @@ class SimpleInvoice(BaseInvoice):
         self.pdf.drawText(text)
 
     def _drawObject(self, TOP, LEFT):
-        self.pdf.setFont(FONT.normal, 12)
-        self.pdf.drawString(
-            LEFT * mm, (TOP + 2) * mm, _(f"Objet: {self.invoice.objet}")
-        )
+        style = ParagraphStyle("normal", fontName=FONT.normal, fontSize=12)
+        p = Paragraph(_(f"Objet: {self.invoice.objet}"), style)
+        pwidth, pheight = p.wrapOn(self.pdf, 90 * mm, 30 * mm)
+        p.drawOn(self.pdf, LEFT * mm, (TOP + 2) * mm)
+
+        # self.pdf.setFont(FONT.normal, 12)
+        # self.pdf.drawString(LEFT * mm, (TOP + 2) * mm, _(f"Objet: {self.invoice.objet}"))
 
     def _drawItemsHeader(self, TOP, LEFT):
         self.pdf.setFont(FONT.normal, 12)
