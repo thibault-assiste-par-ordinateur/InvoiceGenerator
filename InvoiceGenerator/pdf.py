@@ -185,12 +185,8 @@ class SimpleInvoice(BaseInvoice):
         self._drawObject(self.TOP - 80, self.LEFT + 3)
         items_top = 90
         ofst = self._drawItems(self.TOP - items_top, self.LEFT)
-        self._drawMontantAVerserALAuteur(
-            self.TOP - items_top - ofst - 15, self.LEFT
-        )
-        self._drawContributionDiffuseur(
-            self.TOP - items_top - ofst - 45, self.LEFT
-        )
+        self._drawMontantAVerserALAuteur(self.TOP - items_top - ofst - 15, self.LEFT)
+        self._drawContributionDiffuseur(self.TOP - items_top - ofst - 45, self.LEFT)
         self._drawFooter(self.TOP - 265, self.LEFT - 2)
         self.pdf.setFillColorRGB(0, 0, 0)
 
@@ -210,7 +206,7 @@ class SimpleInvoice(BaseInvoice):
     def _drawTitle(self):
         # Up line
         self.pdf.setFont(FONT.normal, 15)
-        self.pdf.drawString(self.invoice_type)
+        self.pdf.drawString(self.LEFT * mm, self.TOP * mm, self.invoice_type)
         self.pdf.drawRightString(
             (self.LEFT + 180) * mm,
             self.TOP * mm,
