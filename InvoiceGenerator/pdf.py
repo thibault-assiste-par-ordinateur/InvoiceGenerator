@@ -446,11 +446,12 @@ class SimpleInvoice(BaseInvoice):
         )
 
         self.pdf.setFont(FONT.bold, 11)
-        self.pdf.drawRightString(
-            (LEFT + 177) * mm,
-            (TOP - 3) * mm,
-            self.currency.format(self.invoice.price),
-        )
+        if self.invoice.price:
+            self.pdf.drawRightString(
+                (LEFT + 177) * mm,
+                (TOP - 3) * mm,
+                self.currency.format(self.invoice.price),
+            )
 
     def _drawContributionDiffuseur(self, TOP, LEFT):
         self.pdf.setFont(FONT.normal, 12)
