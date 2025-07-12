@@ -190,7 +190,6 @@ class Item(object):
         self._description = description
         self.unit = unit
         self.tax = tax
-        self.commentaire = commentaire
 
     @property
     def total(self):
@@ -220,15 +219,6 @@ class Item(object):
         self._description = value
 
     @property
-    def commentaire(self):
-        """Optional commentaire"""
-        return self._commentaire
-
-    @commentaire.setter
-    def commentaire(self, value):
-        self._commentaire = value if value else ""
-
-    @property
     def count(self):
         """Count or amount of the items."""
         return self._count
@@ -236,7 +226,6 @@ class Item(object):
     @count.setter
     def count(self, value):
         self._count = Decimal(value) if value else ""
-        
 
     @property
     def price(self):
@@ -304,6 +293,8 @@ class Invoice(UnicodeProperty):
 
     # objet de la facture
     objet = ""
+
+    commentaire = ""
 
     #: round result to integers?
     rounding_result = False
@@ -378,6 +369,16 @@ class Invoice(UnicodeProperty):
         return decimal.Decimal(price).quantize(
             0, rounding=self.rounding_strategy
         )
+
+    @property
+    def commentaire(self):
+        """Optional commentaire"""
+        return self._commentaire
+
+    @commentaire.setter
+    def commentaire(self, value):
+        self._commentaire = value if value else ""
+
 
     @property
     def difference_in_rounding(self):

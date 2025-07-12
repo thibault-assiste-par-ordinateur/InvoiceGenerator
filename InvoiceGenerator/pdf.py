@@ -185,8 +185,9 @@ class SimpleInvoice(BaseInvoice):
         self._drawObject(self.TOP - 80, self.LEFT + 3)
         items_top = 90
         ofst = self._drawItems(self.TOP - items_top, self.LEFT)
-        self._drawMontantAVerserALAuteur(self.TOP - items_top - ofst - 15, self.LEFT)
-        self._drawContributionDiffuseur(self.TOP - items_top - ofst - 45, self.LEFT)
+        ofst_comment = self._drawComment(self.TOP - items_top - ofst, self.LEFT)
+        self._drawMontantAVerserALAuteur(self.TOP - items_top - ofst - ofst_comment - 15, self.LEFT)
+        self._drawContributionDiffuseur(self.TOP - items_top - ofst  - ofst_comment - 45, self.LEFT)
         self._drawFooter(self.TOP - 265, self.LEFT - 2)
         self.pdf.setFillColorRGB(0, 0, 0)
 
@@ -344,37 +345,39 @@ class SimpleInvoice(BaseInvoice):
 
         for item in self.invoice.items:
             style = ParagraphStyle("normal", fontName=FONT.normal, fontSize=7)
-            
-            if item.commentaire:
-                p = Paragraph(item.commentaire, style)
-                pwidth, pheight = p.wrapOn(self.pdf, 120 * mm, 30 * mm)
-                p.drawOn(self.pdf, (LEFT + 3) * mm, (TOP - i + 3) * mm)
+        
+            p = Paragraph(item.description, style)
+            pwidth, pheight = p.wrapOn(self.pdf, 90 * mm, 30 * mm)
+            i_add = max(float(pheight) / mm, 4.23)
 
-            else:
-                p = Paragraph(item.description, style)
-                pwidth, pheight = p.wrapOn(self.pdf, 90 * mm, 30 * mm)
-                i_add = max(float(pheight) / mm, 4.23)
+            # leading line
+            path = self.pdf.beginPath()
+            path.moveTo(LEFT * mm, (TOP - i + 3.5) * mm)
+            path.lineTo((LEFT + 180) * mm, (TOP - i + 3.5) * mm)
+            self.pdf.drawPath(path, True, True)
 
-                # leading line
-                path = self.pdf.beginPath()
-                path.moveTo(LEFT * mm, (TOP - i + 3.5) * mm)
-                path.lineTo((LEFT + 180) * mm, (TOP - i + 3.5) * mm)
-                self.pdf.drawPath(path, True, True)
-
-                i += i_add
-                p.drawOn(self.pdf, (LEFT + 3) * mm, (TOP - i + 3) * mm)
-                i -= 4.23
-                if item.count:
-                    count_fmt = '%i' if item.count == int(item.count) else '%.2f'
-                    formatted = locale.format_string(count_fmt, item.count, grouping=True)
-                    self.pdf.drawRightString((LEFT + 118) * mm, (TOP - i) * mm, f"{formatted} {item.unit}")
-                self.pdf.drawRightString((LEFT + 148) * mm, (TOP - i) * mm, self.currency.format(item.price))
-                self.pdf.drawRightString((LEFT + 177) * mm, (TOP - i) * mm, self.currency.format(item.total))
+            i += i_add
+            p.drawOn(self.pdf, (LEFT + 3) * mm, (TOP - i + 3) * mm)
+            i -= 4.23
+            if item.count:
+                count_fmt = '%i' if item.count == int(item.count) else '%.2f'
+                formatted = locale.format_string(count_fmt, item.count, grouping=True)
+                self.pdf.drawRightString((LEFT + 118) * mm, (TOP - i) * mm, f"{formatted} {item.unit}")
+            self.pdf.drawRightString((LEFT + 148) * mm, (TOP - i) * mm, self.currency.format(item.price))
+            self.pdf.drawRightString((LEFT + 177) * mm, (TOP - i) * mm, self.currency.format(item.total))
             i += 5
 
-            
-            
         return i
+    
+    def _drawComment(self, TOP, LEFT):
+        if self.invoice.commentaire:
+            style = ParagraphStyle("normal", fontName=FONT.normal, fontSize=7)
+            p = Paragraph(self.invoice.commentaire, style)
+            pwidth, pheight = p.wrapOn(self.pdf, 120 * mm, 30 * mm)
+            p.drawOn(self.pdf, (LEFT + 3) * mm, (TOP + 3) * mm)
+            return 4.23
+        return 0
+    
 
     def _drawMontantAVerserALAuteur(self, TOP, LEFT):
         self.pdf.setFont(FONT.normal, 12)
