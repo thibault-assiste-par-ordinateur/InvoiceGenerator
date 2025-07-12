@@ -185,7 +185,7 @@ class SimpleInvoice(BaseInvoice):
         self._drawObject(self.TOP - 80, self.LEFT + 3)
         items_top = 90
         ofst = self._drawItems(self.TOP - items_top, self.LEFT)
-        ofst_comment = self._drawComment(self.TOP - items_top - ofst - 15, self.LEFT)
+        ofst_comment = self._drawComment(self.TOP - items_top - ofst - 5, self.LEFT)
         self._drawMontantAVerserALAuteur(self.TOP - items_top - ofst - ofst_comment - 15, self.LEFT)
         self._drawContributionDiffuseur(self.TOP - items_top - ofst  - ofst_comment - 45, self.LEFT)
         self._drawFooter(self.TOP - 265, self.LEFT - 2)
@@ -371,7 +371,6 @@ class SimpleInvoice(BaseInvoice):
     
     def _drawComment(self, TOP, LEFT):
         if self.invoice.commentaire:
-            print("COMMENTAIRE")
             style = ParagraphStyle("normal", fontName=FONT.normal, fontSize=7)
             p = Paragraph(self.invoice.commentaire, style)
             pwidth, pheight = p.wrapOn(self.pdf, 120 * mm, 30 * mm)
