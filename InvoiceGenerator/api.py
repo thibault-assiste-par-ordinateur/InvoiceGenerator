@@ -219,6 +219,15 @@ class Item(object):
         self._description = value
 
     @property
+    def commentaire(self):
+        """Optional commentaire"""
+        return self._commentaire
+
+    @commentaire.setter
+    def commentaire(self, value):
+        self._commentaire = value if value else ""
+
+    @property
     def count(self):
         """Count or amount of the items."""
         return self._count
