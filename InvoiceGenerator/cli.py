@@ -173,7 +173,7 @@ class InvoiceCLI:
         pdf_path.parent.mkdir(parents=True, exist_ok=True)
         SimpleInvoice(invoice, pdf_path).gen()
 
-        self.console.print(f"[bold green]✓ PDF generated → {pdf_path}")
+        self.console.print(f"[bold green]PDF generated -> {pdf_path}")
 
 
 # -------------------------------------------------------------------------
@@ -185,4 +185,4 @@ if __name__ == "__main__":              # pragma: no cover
         provider_path = Path("provider.yaml"),
         clients_path  = Path("clients_abook.yaml"),
         items_path    = Path("items.yaml"),
-    ).run(sys.argv[1:])
+    ).run() # defaults to sys.argv[1:] for optional arguments
