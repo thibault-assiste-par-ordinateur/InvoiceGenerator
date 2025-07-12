@@ -184,12 +184,13 @@ class Item(object):
     :param tax: the tax rate under which the item falls (in percent)
     """
 
-    def __init__(self, count, price, description="", unit="", tax=Decimal(0)):
+    def __init__(self, count, price, description="", commentaire="", unit="", tax=Decimal(0)):
         self.count = count
         self.price = price
         self._description = description
         self.unit = unit
         self.tax = tax
+        self.commentaire = commentaire
 
     @property
     def total(self):
