@@ -107,11 +107,12 @@ class CurrencyFormatter:
             unit = self.unit
         if not locale:
             locale = self.locale
-        currency_string = format_currency(amount, unit, locale=locale)
-        if locale == "fr_FR.UTF-8":
-            currency_string = currency_string.replace(",00", ",-")
-        return currency_string
-
+        if amount:
+            currency_string = format_currency(amount, unit, locale=locale)
+            if locale == "fr_FR.UTF-8":
+                currency_string = currency_string.replace(",00", ",-")
+            return currency_string
+        return amount
 
 def generate_filename(invoice: Invoice, path_dir: Path):
     # path
@@ -406,18 +407,13 @@ class SimpleInvoice(BaseInvoice):
             p.drawOn(self.pdf, (LEFT + 3) * mm, (TOP - i + 3) * mm)
             i -= 4.23
             if item.count:
-                if float(int(item.count)) == item.count:
-                    self.pdf.drawRightString(
-                        (LEFT + 118) * mm,
-                        (TOP - i) * mm,
-                        f"{locale.format_string('%i', item.count, grouping=True)} {item.unit}",
-                    )
-                else:
-                    self.pdf.drawRightString(
-                        (LEFT + 118) * mm,
-                        (TOP - i) * mm,
-                        f"{ locale.format_string('%.2f', item.count, grouping=True)} {item.unit}",
-                    )
+                count_fmt = '%i' if item.count == int(item.count) else '%.2f'
+                formatted = locale.format_string(count_fmt, item.count, grouping=True)
+                self.pdf.drawRightString(
+                    (LEFT + 118) * mm,
+                    (TOP - i) * mm,
+                    f"{formatted} {item.unit}",
+                )
             self.pdf.drawRightString(
                 (LEFT + 148) * mm,
                 (TOP - i) * mm,
