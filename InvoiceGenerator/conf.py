@@ -63,7 +63,6 @@ class FONT:
 #     elif is_windows:
 #         output_dir = Path("D:/2-Access/ADMIN/compta/FACTURATION/Factures/").expanduser()
 
-
 # print(f"output: {PATH.output_dir}")
 
 

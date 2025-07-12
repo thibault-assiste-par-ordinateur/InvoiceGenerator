@@ -23,7 +23,6 @@ from InvoiceGenerator.conf import (
     FONT_BOLD_PATH,
     FONT_PATH,
     LANGUAGE,
-    PATH,
     get_gettext,
 )
 
@@ -114,12 +113,13 @@ class CurrencyFormatter:
         return currency_string
 
 
-def generate_filename(invoice: Invoice):
+def generate_filename(invoice: Invoice, path_dir: Path):
     # path
     if not invoice.date:
         invoice.date = datetime.date.today()
     current_year = str(invoice.date.year)
-    path = PATH.output_dir / current_year
+    # path = PATH.output_dir / current_year
+    path = path_dir / current_year
     path.mkdir(parents=True, exist_ok=True)
 
     # invoice id
@@ -145,6 +145,10 @@ class SimpleInvoice(BaseInvoice):
     :type invoice: Invoice
     """
 
+    def __init__(self, path):
+        super().__init__(self)
+        self.path = path
+
     LINE_WIDTH = 0.2
     TOP = 277
     LEFT = 15
@@ -160,7 +164,7 @@ class SimpleInvoice(BaseInvoice):
         pdfmetrics.registerFont(TTFont(FONT.normal, FONT_PATH))
         pdfmetrics.registerFont(TTFont(FONT.bold, FONT_BOLD_PATH))
 
-        self.invoice_id, full_path = generate_filename(self.invoice)
+        self.invoice_id, full_path = generate_filename(self.invoice, self.path)
         self.pdf = NumberedCanvas(str(full_path), pagesize=A4)
         self._addMetaInformation(self.pdf)
 
