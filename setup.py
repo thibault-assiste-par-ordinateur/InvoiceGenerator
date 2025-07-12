@@ -9,6 +9,32 @@ from setuptools import find_packages, setup
 
 import InvoiceGenerator
 
+from pathlib import Path
+from pkg_resources import RequirementParseError
+
+def parse_requirements(req_path="requirements.txt"):
+    """
+    Return a list of requirement strings, ignoring comments and indexes.
+    """
+    req_file = Path(__file__).with_name(req_path)
+    if not req_file.exists():
+        return []
+
+    requirements = []
+    for line in req_file.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or line.startswith("--"):
+            continue
+        try:
+            # Validate the requirement string
+            from pkg_resources import Requirement
+            Requirement.parse(line)
+        except RequirementParseError:
+            raise SystemExit(f"Bad requirement in {req_path!r}: {line!r}")
+        requirements.append(line)
+    return requirements
+
+
 version = InvoiceGenerator.__versionstr__
 
 # release a version, publish to GitHub and PyPI
@@ -51,12 +77,7 @@ setup(
         "Topic :: Utilities",
         "License :: OSI Approved :: BSD License",
     ],
-    install_requires=[
-        "reportlab",
-        "pillow",
-        # "qrplatba>=0.3.3",
-        "babel",
-    ],
+    install_requires=parse_requirements(),   # ← populated from requirements.txt
     tests_require=[
         "PyPDF2",
         "xmlunittest",
@@ -76,5 +97,3 @@ setup(
     include_package_data=True,
     test_suite="tests",
 )
-
-

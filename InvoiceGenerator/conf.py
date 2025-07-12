@@ -57,14 +57,14 @@ class FONT:
     bold = "DejaVu-Bold"
 
 
-class PATH:
-    if is_linux:
-        output_dir = Path("~/2_domaines/compta/FACTURATION/Factures/").expanduser()
-    elif is_windows:
-        output_dir = Path("C://Users/thiba/Documents/Git/admin/compta/FACTURATION/Factures/").expanduser()
+# class PATH:
+#     if is_linux:
+#         output_dir = Path("~/2_domaines/compta/FACTURATION/Factures/").expanduser()
+#     elif is_windows:
+#         output_dir = Path("D:/2-Access/ADMIN/compta/FACTURATION/Factures/").expanduser()
 
 
-print(f"output: {PATH.output_dir}")
+# print(f"output: {PATH.output_dir}")
 
 
 ### FONTS
