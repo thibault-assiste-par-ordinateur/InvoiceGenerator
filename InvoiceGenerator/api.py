@@ -243,6 +243,8 @@ class Item(object):
     def unit(self, value):
         if value:
             self._unit = value
+        else: 
+            self._unit = ""
 
     @property
     def tax(self):
