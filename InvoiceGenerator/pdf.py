@@ -371,6 +371,7 @@ class SimpleInvoice(BaseInvoice):
     
     def _drawComment(self, TOP, LEFT):
         if self.invoice.commentaire:
+            print("COMMENTAIRE")
             style = ParagraphStyle("normal", fontName=FONT.normal, fontSize=7)
             p = Paragraph(self.invoice.commentaire, style)
             pwidth, pheight = p.wrapOn(self.pdf, 120 * mm, 30 * mm)
