@@ -294,7 +294,7 @@ class Invoice(UnicodeProperty):
     # objet de la facture
     objet = ""
 
-    commentaire = ""
+    _commentaire = ""
 
     #: round result to integers?
     rounding_result = False
