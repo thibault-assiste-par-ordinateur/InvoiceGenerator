@@ -185,7 +185,7 @@ class SimpleInvoice(BaseInvoice):
         self._drawObject(self.TOP - 80, self.LEFT + 3)
         items_top = 90
         ofst = self._drawItems(self.TOP - items_top, self.LEFT)
-        ofst_comment = self._drawComment(self.TOP - items_top - ofst, self.LEFT)
+        ofst_comment = self._drawComment(self.TOP - items_top - ofst - 15, self.LEFT)
         self._drawMontantAVerserALAuteur(self.TOP - items_top - ofst - ofst_comment - 15, self.LEFT)
         self._drawContributionDiffuseur(self.TOP - items_top - ofst  - ofst_comment - 45, self.LEFT)
         self._drawFooter(self.TOP - 265, self.LEFT - 2)

@@ -370,16 +370,6 @@ class Invoice(UnicodeProperty):
             0, rounding=self.rounding_strategy
         )
 
-    # @property
-    # def commentaire(self):
-    #     """Optional commentaire"""
-    #     return self._commentaire
-
-    # @commentaire.setter
-    # def commentaire(self, value):
-    #     self._commentaire = value if value else ""
-
-
     @property
     def difference_in_rounding(self):
         """Difference between rounded price and real price."""
