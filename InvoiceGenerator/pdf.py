@@ -206,12 +206,8 @@ class SimpleInvoice(BaseInvoice):
     def _drawTitle(self):
         # Up line
         self.pdf.setFont(FONT.normal, 15)
-        self.pdf.drawString(self.LEFT * mm, self.TOP * mm, self.invoice_type)
-        self.pdf.drawRightString(
-            (self.LEFT + 180) * mm,
-            self.TOP * mm,
-            _(f"n° {self.invoice_id}"),
-        )
+        self.pdf.drawString(self.LEFT * mm, self.TOP * mm, _(self.invoice_type))
+        self.pdf.drawRightString((self.LEFT + 180) * mm, self.TOP * mm, _(f"n° {self.invoice_id}"))
 
     def _drawDates(self, TOP, LEFT):
         self.pdf.setFont(FONT.normal, 10)
@@ -219,27 +215,11 @@ class SimpleInvoice(BaseInvoice):
         items = []
         lang = get_lang()
         if self.invoice.date:
-            items.append(
-                (
-                    LEFT * mm,
-                    f"{_('Date de facturation')}: {format_date(self.invoice.date, locale=lang)}",
-                )
-            )
+            items.append((LEFT * mm, f"{_('Date de facturation')}: {format_date(self.invoice.date, locale=lang)}"))
         if self.invoice.payback:
-            items.append(
-                (
-                    LEFT * mm,
-                    f"{_('Due date')}: {format_date(self.invoice.payback, locale=lang)}",
-                )
-            )
+            items.append((LEFT * mm, f"{_('Due date')}: {format_date(self.invoice.payback, locale=lang)}"))
         if self.invoice.paytype:
-            items.append(
-                (
-                    LEFT * mm,
-                    f"{_('Paytype')}: {self.invoice.paytype}",
-                )
-            )
-
+            items.append((LEFT * mm, f"{_('Paytype')}: {self.invoice.paytype}"))
         for item in items:
             self.pdf.drawString(item[0], top * mm, item[1])
             top += -5
@@ -315,20 +295,14 @@ class SimpleInvoice(BaseInvoice):
             )
 
     def _drawClient(self, TOP, LEFT):
-        self._drawAddress(
-            TOP, LEFT, 88, 41, _("Destinataire"), self.invoice.client
-        )
+        self._drawAddress(TOP, LEFT, 88, 41, _("Destinataire"), self.invoice.client)
 
     def _drawProvider(self, TOP, LEFT):
-        self._drawAddress(
-            TOP, LEFT, 88, 36, _("Émetteur"), self.invoice.provider
-        )
+        self._drawAddress(TOP, LEFT, 88, 36, _("Émetteur"), self.invoice.provider)
 
     def _drawPayment(self, TOP, LEFT):
         self.pdf.setFont(FONT.bold, 8)
-        self.pdf.drawString(
-            LEFT * mm, (TOP + 2) * mm, _("Informations de paiement")
-        )
+        self.pdf.drawString(LEFT * mm, (TOP + 2) * mm, _("Informations de paiement"))
 
         text = self.pdf.beginText((LEFT) * mm, (TOP - 2) * mm)
         lines = [
@@ -348,43 +322,19 @@ class SimpleInvoice(BaseInvoice):
         pwidth, pheight = p.wrapOn(self.pdf, 175 * mm, 30 * mm)
         p.drawOn(self.pdf, LEFT * mm, TOP * mm)
 
-        # self.pdf.setFont(FONT.normal, 12)
-        # self.pdf.drawString(LEFT * mm, (TOP + 2) * mm, _(f"Objet: {self.invoice.objet}"))
-
     def _drawItemsHeader(self, TOP, LEFT):
         self.pdf.setFont(FONT.normal, 12)
         self.pdf.drawString((LEFT + 3) * mm, (TOP - 5.5) * mm, _("Élements"))
         self.pdf.setFont(FONT.normal, 10)
         i = 9
         if self.invoice.mode == 1:
-            self.pdf.drawString(
-                (LEFT + 111) * mm,
-                (TOP - i) * mm,
-                _("unités"),
-            )
-            self.pdf.drawString(
-                (LEFT + 131) * mm,
-                (TOP - i) * mm,
-                _("prix unitaire"),
-            )
+            self.pdf.drawString((LEFT + 111) * mm, (TOP - i) * mm, _("unités"))
+            self.pdf.drawString((LEFT + 131) * mm, (TOP - i) * mm, _("prix unitaire"))
         elif self.invoice.mode == 2:
-            self.pdf.drawString(
-                (LEFT + 98) * mm,
-                (TOP - i) * mm,
-                _("droits d'auteur"),
-            )
-            self.pdf.drawString(
-                (LEFT + 131) * mm,
-                (TOP - i) * mm,
-                _("prix de vente"),
-            )
+            self.pdf.drawString((LEFT + 98) * mm, (TOP - i) * mm, _("droits d'auteur"))
+            self.pdf.drawString((LEFT + 131) * mm, (TOP - i) * mm, _("prix de vente"))
 
-        self.pdf.drawRightString(
-            (LEFT + 177) * mm,
-            (TOP - i) * mm,
-            _("total"),
-        )
-
+        self.pdf.drawRightString((LEFT + 177) * mm, (TOP - i) * mm, _("total"))
         i += 5
         return i
 
@@ -410,29 +360,20 @@ class SimpleInvoice(BaseInvoice):
             if item.count:
                 count_fmt = '%i' if item.count == int(item.count) else '%.2f'
                 formatted = locale.format_string(count_fmt, item.count, grouping=True)
-                self.pdf.drawRightString(
-                    (LEFT + 118) * mm,
-                    (TOP - i) * mm,
-                    f"{formatted} {item.unit}",
-                )
-            self.pdf.drawRightString(
-                (LEFT + 148) * mm,
-                (TOP - i) * mm,
-                self.currency.format(item.price),
-            )
-            self.pdf.drawRightString(
-                (LEFT + 177) * mm,
-                (TOP - i) * mm,
-                self.currency.format(item.total),
-            )
+                self.pdf.drawRightString((LEFT + 118) * mm, (TOP - i) * mm, f"{formatted} {item.unit}")
+            self.pdf.drawRightString((LEFT + 148) * mm, (TOP - i) * mm, self.currency.format(item.price))
+            self.pdf.drawRightString((LEFT + 177) * mm, (TOP - i) * mm, self.currency.format(item.total))
             i += 5
+            
+            if item.comment:
+                print(item.commentaire)
+            
+            
         return i
 
     def _drawMontantAVerserALAuteur(self, TOP, LEFT):
         self.pdf.setFont(FONT.normal, 12)
-        self.pdf.drawString(
-            (LEFT + 3) * mm, TOP * mm, _("Montant à verser à l'auteur")
-        )
+        self.pdf.drawString((LEFT + 3) * mm, TOP * mm, _("Montant à verser à l'auteur"))
 
         path = self.pdf.beginPath()
         path.moveTo(LEFT * mm, (TOP - 5) * mm)
@@ -440,19 +381,11 @@ class SimpleInvoice(BaseInvoice):
         self.pdf.drawPath(path, True, True)
 
         self.pdf.setFont(FONT.normal, 7)
-        self.pdf.drawString(
-            (LEFT + 3) * mm,
-            (TOP - 9) * mm,
-            _("TVA non applicable, article 293B du Code Général des impôts"),
-        )
+        self.pdf.drawString((LEFT + 3) * mm, (TOP - 9) * mm, _("TVA non applicable, article 293B du Code Général des impôts"))
 
         self.pdf.setFont(FONT.bold, 11)
         if self.invoice.price:
-            self.pdf.drawRightString(
-                (LEFT + 177) * mm,
-                (TOP - 3) * mm,
-                self.currency.format(self.invoice.price),
-            )
+            self.pdf.drawRightString((LEFT + 177) * mm, (TOP - 3) * mm, self.currency.format(self.invoice.price))
 
     def _drawContributionDiffuseur(self, TOP, LEFT):
         self.pdf.setFont(FONT.normal, 12)
