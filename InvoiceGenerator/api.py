@@ -221,8 +221,8 @@ class Item(object):
 
     @count.setter
     def count(self, value):
-        if value:
-            self._count = Decimal(value)
+        self._count = Decimal(value) if value else ""
+        
 
     @property
     def price(self):
@@ -240,11 +240,8 @@ class Item(object):
         return self._unit
 
     @unit.setter
-    def unit(self, value):
-        if value:
-            self._unit = value
-        else: 
-            self._unit = ""
+    def unit(self, value):        
+        self._unit = value if value else ""
 
     @property
     def tax(self):
